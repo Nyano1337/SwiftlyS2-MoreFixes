@@ -98,13 +98,13 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes.Impl
                 bool hasOnlyStripFlag = (flags & SF_PLAYEREQUIP_ONLYSTRIPSAME) != 0;
 
                 if ((hasStripFlag || hasOnlyStripFlag) &&
-                    activator != null &&
-                    activator.DesignerName == "player")
+                    (activator != null && activator.IsValid &&
+                    activator.DesignerName == "player"))
                 {
                     var pawn = activator.As<CCSPlayerPawn>();
-                    if (hasStripFlag)
+                    if (pawn is not null && pawn.IsValid && hasStripFlag)
                     {
-                        _logger.LogInformation($"Stripping weapons from player {pawn.Controller.Value?.DesignerName}");
+                        // _logger.LogInformation($"Stripping weapons from player {pawn.Controller.Value?.DesignerName}");
                         StripPlayerWeapons(pawn);
                     }
                 }
