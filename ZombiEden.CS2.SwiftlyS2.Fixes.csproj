@@ -13,7 +13,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="resources/gamedata/**/*;resources/templates/**/*;resources/translations/**/*">
+		<Content Include="src/resources/**/*">
+			<TargetPath>resources\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
