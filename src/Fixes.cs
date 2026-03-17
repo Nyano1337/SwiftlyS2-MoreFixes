@@ -45,6 +45,7 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes
             services.AddSingleton<ITriggerForPlayerFixService, TriggerForPlayerFixService>();
             services.AddSingleton<IGravityTouchFixService, GravityTouchFixService>();
             services.AddSingleton<ISubtickDisableService, SubtickDisableService>();
+            services.AddSingleton<IGameUIFixService, GameUIFixService>();
 
             var serviceProvider = services.BuildServiceProvider();
 
@@ -57,7 +58,8 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes
                 serviceProvider.GetRequiredService<ITriggerPushTouchFixService>(),
                 serviceProvider.GetRequiredService<ITriggerForPlayerFixService>(),
                 serviceProvider.GetRequiredService<IGravityTouchFixService>(),
-                serviceProvider.GetRequiredService<ISubtickDisableService>()
+                serviceProvider.GetRequiredService<ISubtickDisableService>(),
+                serviceProvider.GetRequiredService<IGameUIFixService>()
             };
 
             // 安装所有服务
