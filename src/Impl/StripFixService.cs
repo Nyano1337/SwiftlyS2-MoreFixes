@@ -104,7 +104,6 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes.Impl
                     var pawn = activator.As<CCSPlayerPawn>();
                     if (pawn is not null && pawn.IsValid && hasStripFlag)
                     {
-                        // _logger.LogInformation($"Stripping weapons from player {pawn.Controller.Value?.DesignerName}");
                         StripPlayerWeapons(pawn);
                     }
                 }
@@ -122,14 +121,12 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes.Impl
         {
             try
             {
-                if (pawn == null)
+                if (pawn == null || !pawn.Valid())
                 {
-                    _logger.LogWarning("Attempted to strip weapons from null pawn");
+                    _logger.LogWarning("Attempted to strip weapons from null or invalid pawn");
                     return false;
                 }
 
-                var playerName = pawn.Controller.Value?.DesignerName ?? "Unknown";
-                _logger.LogInformation($"Stripping weapons from player: {playerName}");
 
                 var itemServices = pawn.ItemServices;
                 if (itemServices != null)
@@ -151,14 +148,11 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes.Impl
         {
             try
             {
-                if (pawn == null)
+                if (pawn == null || !pawn.Valid())
                 {
-                    _logger.LogWarning("Attempted to strip weapons from null pawn");
+                    _logger.LogWarning("Attempted to strip weapons from null or invalid pawn");
                     return false;
                 }
-
-                var playerName = pawn.Controller.Value?.DesignerName ?? "Unknown";
-                _logger.LogInformation($"Stripping weapons from player: {playerName}");
 
                 var weaponService = pawn.WeaponServices;
                 var removeWeapons = new List<CBasePlayerWeapon>();
