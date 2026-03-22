@@ -196,7 +196,7 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes.Impl
                 var activator = core.Memory.ToSchemaClass<CBaseEntity>(inputData.pActivator);
                 uint flags = equipEntity.Spawnflags;
 
-                if (activator == null || activator.DesignerName == "player")
+                if (activator == null || !activator.IsValid || activator.DesignerName == "player")
                     return true;
 
                 var pawn = activator.As<CCSPlayerPawn>();
