@@ -22,16 +22,16 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes.Impl
         private const uint SpawnFlagFreezePlayer = 0x0020;
         private const uint SpawnFlagJumpDeactivate = 0x0100;
 
-        private const ulong ButtonAttack = 1UL << 0;
-        private const ulong ButtonJump = 1UL << 1;
-        private const ulong ButtonDuck = 1UL << 2;
-        private const ulong ButtonForward = 1UL << 3;
-        private const ulong ButtonBack = 1UL << 4;
-        private const ulong ButtonUse = 1UL << 5;
-        private const ulong ButtonMoveLeft = 1UL << 9;
-        private const ulong ButtonMoveRight = 1UL << 10;
-        private const ulong ButtonAttack2 = 1UL << 11;
-        private const ulong ButtonSpeed = 1UL << 17;
+        private const ulong ButtonAttack = 0x1;
+        private const ulong ButtonJump = 0x2;
+        private const ulong ButtonDuck = 0x4;
+        private const ulong ButtonForward = 0x8;
+        private const ulong ButtonBack = 0x10;
+        private const ulong ButtonUse = 0x20;
+        private const ulong ButtonMoveLeft = 0x200;
+        private const ulong ButtonMoveRight = 0x400;
+        private const ulong ButtonAttack2 = 0x800;
+        private const ulong ButtonSpeed = 0x10000;
 
         public string ServiceName => "GameUIFix";
 
