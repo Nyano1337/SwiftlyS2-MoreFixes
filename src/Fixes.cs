@@ -23,56 +23,49 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes
         {
             // 创建依赖注入容器
             var services = new ServiceCollection();
-            services.AddSwiftly(core);
-            
-            services.AddKeyedSingleton<IGameDataPatchService>("ServerMovementUnlock", (sp, key) =>
-                new GameDataPatchService(
-                    Core, 
-                    sp.GetRequiredService<ILogger<GameDataPatchService>>(), 
-                    "ServerMovementUnlock"
-                ));
+            services.AddSwiftly(Core);
 
-            services.AddKeyedSingleton<IGameDataPatchService>("FixWaterFloorJump", (sp, key) =>
-                new GameDataPatchService(
-                    Core, 
-                    sp.GetRequiredService<ILogger<GameDataPatchService>>(), 
-                    "FixWaterFloorJump"
-                ));
+            var fixServiceFactories = new List<(string Name, Func<IServiceProvider, IGameFixService> Factory)>();
+
+            AddFixService<ServerMovementUnlockPatchService>(services, fixServiceFactories);
+            AddFixService<FixWaterFloorJumpPatchService>(services, fixServiceFactories);
 
             // 注册其他修复服务
-            services.AddSingleton<IStripFixService, StripFixService>();
-            services.AddSingleton<ITriggerPushTouchFixService, TriggerPushTouchFixService>();
-            services.AddSingleton<ITriggerForPlayerFixService, TriggerForPlayerFixService>();
-            services.AddSingleton<IGravityTouchFixService, GravityTouchFixService>();
-            services.AddSingleton<ISubtickDisableService, SubtickDisableService>();
-            services.AddSingleton<IGameUIFixService, GameUIFixService>();
+            AddFixService<IStripFixService, StripFixService>(services, fixServiceFactories);
+            AddFixService<ITriggerPushTouchFixService, TriggerPushTouchFixService>(services, fixServiceFactories);
+            AddFixService<ITriggerForPlayerFixService, TriggerForPlayerFixService>(services, fixServiceFactories);
+            AddFixService<IGravityTouchFixService, GravityTouchFixService>(services, fixServiceFactories);
+            AddFixService<ISubtickDisableService, SubtickDisableService>(services, fixServiceFactories);
+            AddFixService<IGameUIFixService, GameUIFixService>(services, fixServiceFactories);
 
             var serviceProvider = services.BuildServiceProvider();
 
-            // 获取所有修复服务
-            var allServices = new IGameFixService[]
-            {
-                serviceProvider.GetRequiredKeyedService<IGameDataPatchService>("ServerMovementUnlock"),
-                serviceProvider.GetRequiredKeyedService<IGameDataPatchService>("FixWaterFloorJump"),
-                serviceProvider.GetRequiredService<IStripFixService>(),
-                serviceProvider.GetRequiredService<ITriggerPushTouchFixService>(),
-                serviceProvider.GetRequiredService<ITriggerForPlayerFixService>(),
-                serviceProvider.GetRequiredService<IGravityTouchFixService>(),
-                serviceProvider.GetRequiredService<ISubtickDisableService>(),
-                serviceProvider.GetRequiredService<IGameUIFixService>()
-            };
-
             // 安装所有服务
-            foreach (var service in allServices)
+            foreach (var (registrationName, factory) in fixServiceFactories)
             {
+                IGameFixService? service = null;
+
                 try
                 {
+                    service = factory(serviceProvider);
                     service.Install();
                     _fixServices.Add(service);
                 }
                 catch (Exception ex)
                 {
-                    Core.Logger.LogError($"Failed to install {service.ServiceName}: {ex.Message}");
+                    if (service is not null)
+                    {
+                        try
+                        {
+                            service.Uninstall();
+                        }
+                        catch (Exception cleanupEx)
+                        {
+                            Core.Logger.LogError(cleanupEx, "Failed to cleanup {RegistrationName} after install failure", registrationName);
+                        }
+                    }
+
+                    Core.Logger.LogError(ex, "Failed to install {RegistrationName}", registrationName);
                 }
             }
         }
@@ -92,6 +85,25 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes
             }
 
             _fixServices.Clear();
+        }
+
+        private static void AddFixService<TImplementation>(
+            IServiceCollection services,
+            ICollection<(string Name, Func<IServiceProvider, IGameFixService> Factory)> fixServiceFactories)
+            where TImplementation : class, IGameFixService
+        {
+            services.AddSingleton<TImplementation>();
+            fixServiceFactories.Add((typeof(TImplementation).Name, static sp => sp.GetRequiredService<TImplementation>()));
+        }
+
+        private static void AddFixService<TService, TImplementation>(
+            IServiceCollection services,
+            ICollection<(string Name, Func<IServiceProvider, IGameFixService> Factory)> fixServiceFactories)
+            where TService : class, IGameFixService
+            where TImplementation : class, TService
+        {
+            services.AddSingleton<TService, TImplementation>();
+            fixServiceFactories.Add((typeof(TImplementation).Name, static sp => sp.GetRequiredService<TService>()));
         }
     }
 }

@@ -1,36 +1,38 @@
 ﻿using Microsoft.Extensions.Logging;
 using SwiftlyS2.Shared;
+using SwiftlyS2.Shared.Convars;
 using ZombiEden.CS2.SwiftlyS2.Fixes.Interface;
 
 namespace ZombiEden.CS2.SwiftlyS2.Fixes.Impl
 {
     /// <summary>
-    /// GameData补丁服务实现（只负责在Load时应用补丁）
+    /// GameData补丁服务状态承载基类。
+    /// 具体补丁实现类只需要提供补丁名和对应的 ConVar。
     /// </summary>
-    public class GameDataPatchService(
+    public abstract class GameDataPatchService(
         ISwiftlyCore core,
-        ILogger<IGameDataPatchService> logger,
-        string patchName) : IGameDataPatchService
+        ILogger logger) : IGameDataPatchService
     {
-        public string ServiceName { get; } = $"GameDataPatch:{patchName}";
+        protected ISwiftlyCore Core { get; } = core;
 
-        public void Install()
-        {
-            try
-            {
-                core.GameData.ApplyPatch(patchName);
-                logger.LogInformation($"{ServiceName} applied successfully");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"Failed to apply {ServiceName}: {ex.Message}");
-                throw;
-            }
-        }
+        protected ILogger Logger { get; } = logger;
 
-        public void Uninstall()
-        {
-            
-        }
+        ISwiftlyCore IGameDataPatchService.Core => Core;
+
+        ILogger IGameDataPatchService.Logger => Logger;
+
+        IConVar<bool>? IGameDataPatchService.EnableConVar { get; set; }
+
+        bool IGameDataPatchService.Installed { get; set; }
+
+        bool IGameDataPatchService.Enabled { get; set; }
+
+        bool IGameDataPatchService.PatchApplied { get; set; }
+
+        public abstract string PatchName { get; }
+
+        public abstract string ConVarName { get; }
+
+        public virtual string ConVarDescription => $"启用 {PatchName} GameData 补丁。关闭不会撤销当前进程中已应用的补丁。";
     }
 }
