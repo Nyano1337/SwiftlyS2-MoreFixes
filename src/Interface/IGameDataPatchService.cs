@@ -21,7 +21,7 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes.Interface
 
         string ConVarDescription => $"启用 {PatchName} GameData 补丁。关闭不会撤销当前进程中已应用的补丁。";
 
-        bool DefaultEnabled => false;
+        bool DefaultEnabled { get; }
 
         IConVar<bool>? EnableConVar { get; set; }
 

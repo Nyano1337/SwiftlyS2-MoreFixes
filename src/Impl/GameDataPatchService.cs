@@ -33,6 +33,8 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes.Impl
 
         public abstract string ConVarName { get; }
 
+        public virtual bool DefaultEnabled => false;
+
         public virtual string ConVarDescription => $"启用 {PatchName} GameData 补丁。关闭不会撤销当前进程中已应用的补丁。";
     }
 }
