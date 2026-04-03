@@ -45,7 +45,7 @@
 
 | ConVar | 描述 | 默认值 | 权限 |
 |--------|------|--------|------|
-| `sw_patch_server_movement_unlock_enable` | 启用 `ServerMovementUnlock` GameData 补丁（关闭不会撤销当前进程已应用的补丁） | `true` | SERVER_CAN_EXECUTE |
+| `sw_patch_server_movement_unlock_enable` | 启用 `ServerMovementUnlock` GameData 补丁（关闭不会撤销当前进程已应用的补丁） | `false` | SERVER_CAN_EXECUTE |
 | `sw_patch_fix_water_floor_jump_enable` | 启用 `FixWaterFloorJump` GameData 补丁（关闭不会撤销当前进程已应用的补丁） | `true` | SERVER_CAN_EXECUTE |
 | `cs2f_use_old_push` | 是否使用 CSGO 风格的旧推动机制 | `false` | SERVER_CAN_EXECUTE |
 | `sw_gameuifix_enable` | 启用 `game_ui` 代理实体修复 | `false` | SERVER_CAN_EXECUTE |

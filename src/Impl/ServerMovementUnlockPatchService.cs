@@ -14,7 +14,7 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes.Impl
 
         public override string ConVarName => "sw_patch_server_movement_unlock_enable";
 
-        public override bool DefaultEnabled => true;
+        public override bool DefaultEnabled => false;
 
         public override string ConVarDescription => "启用 ServerMovementUnlock GameData 补丁。关闭不会撤销当前进程中已应用的补丁。";
     }
