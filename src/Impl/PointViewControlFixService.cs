@@ -7,8 +7,6 @@ using SwiftlyS2.Shared.GameEvents;
 using SwiftlyS2.Shared.Misc;
 using ZombiEden.CS2.SwiftlyS2.Fixes.Impl.CustomEntity;
 using ZombiEden.CS2.SwiftlyS2.Fixes.Interface;
-using static Dapper.SqlMapper;
-using static SwiftlyS2.Shared.Events.EventDelegates;
 
 namespace ZombiEden.CS2.SwiftlyS2.Fixes.Impl;
 
