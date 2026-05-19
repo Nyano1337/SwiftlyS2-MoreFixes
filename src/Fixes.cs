@@ -25,6 +25,9 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes
             var services = new ServiceCollection();
             services.AddSwiftly(Core);
 
+            GameFunctions.Setup(Core);
+            Extensions.Setup(Core);
+
             var fixServiceFactories = new List<(string Name, Func<IServiceProvider, IGameFixService> Factory)>();
 
             AddFixService<ServerMovementUnlockPatchService>(services, fixServiceFactories);
