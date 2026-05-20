@@ -21,7 +21,6 @@ public class PointViewControlFixService : IPointViewControlFixService
 
     private IConVar<bool>? _enableConVar;
     private bool _enabled;
-    private CancellationTokenSource? _thinkTimer;
 
     public PointViewControlFixService(ISwiftlyCore core, ILogger<PointViewControlFixService> logger)
     {
