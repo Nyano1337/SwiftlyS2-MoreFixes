@@ -43,6 +43,7 @@ namespace ZombiEden.CS2.SwiftlyS2.Fixes
             AddFixService<IBlockParticleMsgsFixService, BlockParticleMsgsFixService>(services, fixServiceFactories);
             AddFixService<ITeleportBorkenFixService, TeleportBorkenFixService>(services, fixServiceFactories);
             AddFixService<IShufflePlayerPhysicsSimFixService, ShufflePlayerPhysicsSimFixService>(services, fixServiceFactories);
+            AddFixService<IPointViewControlFixService, PointViewControlFixService>(services, fixServiceFactories);
 
             var serviceProvider = services.BuildServiceProvider();
 

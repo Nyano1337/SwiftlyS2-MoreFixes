@@ -38,7 +38,7 @@ public class PointViewControlFixService : IPointViewControlFixService
             _enableConVar = _core.ConVar.CreateOrFind(
                 EnableConVarName,
                 "启用 pointviewcontrol 修复",
-                false,
+                true,
                 ConvarFlags.SERVER_CAN_EXECUTE);
 
             _enabled = _enableConVar.Value;
@@ -46,9 +46,7 @@ public class PointViewControlFixService : IPointViewControlFixService
             _core.Event.OnConVarValueChanged += OnConVarValueChanged;
             _core.Event.OnEntitySpawned += OnEntitySpawned;
             _core.Event.OnEntityIdentityAcceptInputHook += OnEntityIdentityAcceptInput;
-
-            // TODO: move to ServerPreEntityThink
-            _thinkTimer = _core.Scheduler.Repeat(1, CPointViewControlHandler.RunThink);
+            _core.Event.OnWorldUpdate += OnWorldUpdate;
 
             _logger.LogInformation("{ServiceName} 安装完成，当前启用状态: {Enabled}", ServiceName, _enabled);
         }
@@ -66,8 +64,7 @@ public class PointViewControlFixService : IPointViewControlFixService
             _core.Event.OnConVarValueChanged -= OnConVarValueChanged;
             _core.Event.OnEntitySpawned -= OnEntitySpawned;
             _core.Event.OnEntityIdentityAcceptInputHook -= OnEntityIdentityAcceptInput;
-
-            _thinkTimer?.Cancel();
+            _core.Event.OnWorldUpdate -= OnWorldUpdate;
 
             _logger.LogInformation("{ServiceName} 已卸载。", ServiceName);
         }
@@ -151,6 +148,12 @@ public class PointViewControlFixService : IPointViewControlFixService
                 @event.Result = HookResult.Stop;
             }
         }
+    }
+
+    private void OnWorldUpdate()
+    {
+        // TODO: move to ServerPreEntityThink
+        CPointViewControlHandler.RunThink();
     }
 
     [GameEventHandler(HookMode.Post)]
